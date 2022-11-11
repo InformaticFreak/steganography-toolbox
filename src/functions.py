@@ -108,26 +108,26 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 image <-> array functions
 """
 
-def image2Array(image:Image) -> np.ndarray:
+def image2Array(image:Image.Image) -> np.ndarray:
 	# check types
-	if type(image) is not Image:
-		raise TypeError(f"image={type(image)} must be of type image")
+	if type(image) is not Image.Image:
+		raise TypeError(f"image={type(image)} must be of type Image.Image")
 	# return image as array
 	return np.asarray(image)
 
-def array2Image(imageArray:np.ndarray) -> Image:
+def array2Image(imageArray:np.ndarray) -> Image.Image:
 	# check types
 	if type(imageArray) is not np.ndarray:
 		raise TypeError(f"imageArray={type(imageArray)} must be of type numpy.array")
 	# return image object
 	return Image.fromarray(imageArray)
 
-def saveImage(path:str, image:Image, *, show:bool=False) -> bool:
+def saveImage(path:str, image:Image.Image, *, show:bool=False) -> bool:
 	# check types
 	if type(path) is not str:
 		raise TypeError(f"path={type(path)} must be of type str")
-	if type(image) is not Image:
-		raise TypeError(f"image={type(image)} must be of type image")
+	if type(image) is not Image.Image:
+		raise TypeError(f"image={type(image)} must be of type Image.Image")
 	if type(show) is not bool:
 		raise TypeError(f"show={type(show)} must be of type bool")
 	# try to save image
