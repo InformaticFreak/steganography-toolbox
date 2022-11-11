@@ -10,15 +10,11 @@ from colorama import init as coloramaInit
 from os.path import join as joinPath
 
 from functions import *
+from methods import *
 
 
 def main(*args):
-	bitsIn = 255
-	bitsOut = setBit(False, bitsIn, pos=1, bigEndian=True)
-	print(f"{bitsIn=:b} {bitsOut=:b}")
-
-	bitsGet = getBit(bitsOut, pos=1, bigEndian=True)
-	print(f"{bitsGet=:b}")
+	hideTextInImage("testBild.png", "out.png", "main.py")
 
 if __name__ == "__main__":
 	main(*sys.argv[1:])
