@@ -108,19 +108,10 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 image <-> array functions
 """
 
-def image2Array(*, image:Image=None, path:str=None) -> np.ndarray:
+def image2Array(image:Image) -> np.ndarray:
 	# check types
-	if type(image) is type(path) is None:
-		raise TypeError("no image or path given")
-	if type(image) is not type(path) is not None:
-		raise TypeError("only image or path may be given")
-	if type(image) is not Image and image is not None:
-		raise TypeError(f"image={type(image)} must be of type image or None if path is given")
-	if type(path) is not str and path is not None:
-		raise TypeError(f"path={type(path)} must be of type str or None if image is given")
-	# load image from path
-	if type(path) is str:
-		image = loadImage(path)
+	if type(image) is not Image:
+		raise TypeError(f"image={type(image)} must be of type image")
 	# return image as array
 	return np.asarray(image)
 
@@ -131,16 +122,17 @@ def array2Image(imageArray:np.ndarray) -> Image:
 	# return image object
 	return Image.fromarray(imageArray)
 
-def saveImage(image:Image, path:str, show:bool=False) -> bool:
+def saveImage(path:str, image:Image, *, show:bool=False) -> bool:
 	# check types
-	if type(image) is not Image:
-		raise TypeError(f"image={type(image)} must be of type Image")
 	if type(path) is not str:
 		raise TypeError(f"path={type(path)} must be of type str")
+	if type(image) is not Image:
+		raise TypeError(f"image={type(image)} must be of type image")
 	if type(show) is not bool:
 		raise TypeError(f"show={type(show)} must be of type bool")
 	# try to save image
 	try:
+		image = image.convert("RGB")
 		image.save(os.path.abspath(path))
 		error = False
 	except OSError:
@@ -158,4 +150,4 @@ def loadImage(path:str) -> Image:
 	if type(path) is not str:
 		raise TypeError(f"path={type(path)} must be of type str")
 	# return image object
-	return Image.open(path)
+	return Image.open(path).convert("RGB")
