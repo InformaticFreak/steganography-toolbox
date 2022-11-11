@@ -14,7 +14,12 @@ from methods import *
 
 
 def main(*args):
-	hideTextInImage("testBild.png", "out.png", "main.py")
+	testPath = joinPath("..", "test")
+	hideTextInImage(
+		os.path.abspath(joinPath(testPath, "inputImage.png")),
+		os.path.abspath(joinPath(testPath, "outputImage.png")),
+		os.path.abspath(joinPath(testPath, "inputText.txt"))
+	)
 
 if __name__ == "__main__":
 	main(*sys.argv[1:])
