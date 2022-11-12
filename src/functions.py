@@ -46,7 +46,7 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 	if type(bits) not in (int, np.uint8):
 		raise TypeError(f"bits={type(bits)} must be of type int")
 	if type(pos) not in (int, str):
-		raise TypeError(f"pos={type(pos)} must be of type int as specific str")
+		raise TypeError(f"pos={type(pos)} must be of type int or a specific str")
 	if type(bigEndian) is not bool:
 		raise TypeError(f"bigEndian={type(bigEndian)} must be of type bool")
 	# check values
@@ -82,7 +82,7 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 	if type(bits) not in (int, np.uint8):
 		raise TypeError(f"bits={type(bits)} must be of type int")
 	if type(pos) not in (int, str):
-		raise TypeError(f"pos={type(pos)} must be of type int as specific str")
+		raise TypeError(f"pos={type(pos)} must be of type int or a specific str")
 	if type(bigEndian) is not bool:
 		raise TypeError(f"bigEndian={type(bigEndian)} must be of type bool")
 	# check values

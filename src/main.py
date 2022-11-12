@@ -49,7 +49,6 @@ def main(*args):
 		# get file paths without " or '
 		inputImagePath = input("Input image path:  ").replace('"', '').replace("'", "")
 		outputImagePath = input("Output image path: ").replace('"', '').replace("'", "")
-		# 
 		if "console" not in selected:
 			inputFilePath = input("Input file path:   ").replace('"', '').replace("'", "")
 		else:
