@@ -1,18 +1,51 @@
 
 import os, sys
+import string
 
+from random import randint
 from PIL import UnidentifiedImageError
 from pick import pick
 from os.path import join as joinPath
 from os.path import abspath
-from colorama import Fore
+from colorama import Fore, Back, Style
 from colorama import init as coloramaInit
 
 from tools import *
 from functions import *
 
 
+def generateTitle() -> list[str]:
+	# possibile letters
+	letters = string.ascii_lowercase + string.ascii_uppercase + string.punctuation + string.digits + 100*" "
+	lettersLen = len(letters)
+	# possibile colors
+	colorsDark = [Fore.BLACK, Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.MAGENTA, Fore.RED, Fore.WHITE, Fore.YELLOW]
+	colorsLight = [Fore.LIGHTBLACK_EX, Fore.LIGHTBLUE_EX, Fore.LIGHTCYAN_EX, Fore.LIGHTGREEN_EX, Fore.LIGHTMAGENTA_EX, Fore.LIGHTRED_EX, Fore.LIGHTWHITE_EX, Fore.LIGHTYELLOW_EX]
+	colorsReset = [Fore.RESET for _ in range(20) ]
+	colors = [ *colorsDark, *colorsLight, *colorsReset ]
+	colorsLen = len(colors)
+	# generate lines with random characters and colors
+	lines = []
+	for _ in range(7):
+		line = Style.DIM
+		for _ in range(80):
+			line += colors[ randint(0, colorsLen-1) ]
+			line += letters[ randint(0, lettersLen-1) ]
+		lines.append(line)
+	# insert program name
+	title = " Steganography  Toolbox "
+	before = lines[3][:28]
+	after = lines[3][51:]
+	lines[3] = Style.DIM + before + Style.RESET_ALL+Fore.GREEN + title + Fore.RESET+Style.DIM + after
+	# return generated ascii art
+	return lines
+
+
 def main(*args):
+	# generate title as ascii art
+	ascii_art = generateTitle()
+	print("\n".join(ascii_art))
+	
 	# select: action
 	title = "Hide or Seek?"
 	options = ["Hide", "Seek"]
@@ -28,7 +61,8 @@ def main(*args):
 			"Show output image after saving",       # 1
 			"Repeat input file in image",           # 2
 			"Select position of manipulated bits",  # 3
-			"Get lenght of hidden bits"             # 4
+			"Get lenght of hidden bits",            # 4
+			"Save config"                           # 5
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
@@ -92,7 +126,8 @@ def main(*args):
 		options = [
 			"Show extracted file (img / txt)",      # 0
 			"Select position of manipulated bits",  # 1
-			"Set lenght of hidden bits"             # 2
+			"Set lenght of hidden bits",            # 2
+			"Save config"                           # 3
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
