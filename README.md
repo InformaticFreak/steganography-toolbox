@@ -1,5 +1,5 @@
 
-# ![Stenography Toolbox](img/title_small.png)
+# ![Stenography Toolbox](img/title_big.png)
 
 A toolbox for steganography
 
