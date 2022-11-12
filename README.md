@@ -5,6 +5,10 @@ A toolbox for steganography
 
 ## Demo
 
+Console UI:
+
+![Console UI](usage.png)
+
 Input image:
 
 ![Input image](test/code.png)
