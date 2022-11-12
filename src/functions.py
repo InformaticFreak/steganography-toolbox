@@ -53,7 +53,8 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 	elif type(bit) is int:
 		if not (0 <= bit <= 1):
 			raise ValueError(f"{bit=} must be 0 or 1 if int")
-	bitsLen = len(f"{bits:b}")
+	bitsStr = f"{bits:0>8b}"
+	bitsLen = len(bitsStr)
 	if bitsLen < 1:
 		raise ValueError(f"{bits=:b} must have at least one digit")
 	posLiterals = {
@@ -71,7 +72,7 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 		if not (0 <= pos <= bitsLen-1) and not (-bitsLen <= pos <= -1):
 			raise ValueError(f"{pos=} must be between 0 and {bitsLen-1} or between {-bitsLen} and -1")
 	# set bit; TODO: use bit-shifting
-	bitsList = [ char for char in f"{bits:b}" ]
+	bitsList = [ char for char in bitsStr ]
 	bitsList[pos] = str(int(bit))
 	# return bits as int
 	return int("".join(bitsList), 2)
