@@ -23,9 +23,9 @@ def hideTextInImage(inputImagePath:str, outputImagePath:str, inputTextPath:str) 
 	# convert text to bitarray
 	bits = file2BitArray(inputTextPath)
 	# load image to array
-	image = loadImage(inputImagePath)
-	width, height = image.size
-	pixels = image2Array(image=image)
+	inputImage = loadImage(inputImagePath)
+	width, height = inputImage.size
+	pixels = image2Array(inputImage)
 	# hide text in image
 	bitsLen = len(bits)
 	textInd = 0
@@ -37,6 +37,7 @@ def hideTextInImage(inputImagePath:str, outputImagePath:str, inputTextPath:str) 
 			g = setBit(bits[textInd % bitsLen], pixel[1]); textInd += 1
 			b = setBit(bits[textInd % bitsLen], pixel[2]); textInd += 1
 			pixels[x][y] = (r, g, b)
-	# save image
-	saveImage(os.path.abspath("../out.png"), imageArray=pixels, show=True)
+	# save image from array
+	outputImage = array2Image(pixels)
+	saveImage(os.path.abspath("out.png"), outputImage, show=True)
 	
