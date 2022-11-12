@@ -2,6 +2,7 @@
 import os
 import numpy as np
 
+from os.path import abspath
 from bitarray import bitarray
 from PIL import Image
 from tqdm import tqdm
@@ -77,7 +78,7 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 
 def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 	# check types
-	if type(bits) is not int:
+	if type(bits) not in (int, np.uint8):
 		raise TypeError(f"bits={type(bits)} must be of type int")
 	if type(pos) not in (int, str):
 		raise TypeError(f"pos={type(pos)} must be of type int as specific str")
@@ -136,7 +137,7 @@ def saveImage(path:str, image:Image.Image, *, show:bool=False) -> bool:
 	# try to save image
 	try:
 		image = image.convert("RGB")
-		image.save(os.path.abspath(path))
+		image.save(abspath(path))
 		error = False
 	except OSError:
 		error = True
