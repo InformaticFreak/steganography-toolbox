@@ -24,8 +24,7 @@ def main(*args):
 		title = "Advanced options:"
 		options = [
 			"Show output image after saving",
-			"Repeat input file in image",
-			"Cut input file if to big"
+			"Repeat input file in image"
 		]
 		selected = pick(options, title, multiselect=True)
 		selected = { option.split(" ")[0].lower() for option, _ in selected }
@@ -40,10 +39,9 @@ def main(*args):
 			abspath(inputImagePath),
 			abspath(outputImagePath),
 			abspath(inputFilePath),
-			# advanced options: show, repeat, cut
+			# advanced options: show, repeat
 			show = "show" in selected,
-			repeat = "repeat" in selected,
-			cut = "cut" in selected
+			repeat = "repeat" in selected
 		)
 		print(Fore.RED+"error occured" if error else Fore.GREEN+"file saved")
 	

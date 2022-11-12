@@ -71,7 +71,7 @@ def hideBitsInImage(image:Image.Image, bits:bitarray, *, repeat:bool=True, progr
 	# return array as image
 	return array2Image(pixels)
 
-def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, cut:bool=True, **kwargs_save) -> bool:
+def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, **kwargs_save) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
@@ -81,8 +81,6 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		raise TypeError(f"inputFilePath={type(inputFilePath)} must be of type str")
 	if type(repeat) is not bool:
 		raise TypeError(f"repeat={type(repeat)} must be of type bool")
-	if type(cut) is not bool: # TODO: cut
-		raise TypeError(f"cut={type(cut)} must be of type bool")
 	# load image to array
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
