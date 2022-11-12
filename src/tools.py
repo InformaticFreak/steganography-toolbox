@@ -127,6 +127,7 @@ def seekBitsInImage(image:Image.Image, *, pos:int="least", lenght:int=None, prog
 		for x in range(width):
 			# break if end of bits reached and repeat is False
 			if bitsInd >= lenght:
+				pbar.total = bitsInd // 3
 				BREAK = True
 				break
 			# get least significant bits

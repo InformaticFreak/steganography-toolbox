@@ -24,14 +24,15 @@ def main(*args):
 		# select: advanced options
 		title = "Advanced options:"
 		options = [
-			"Console input as input file",         # 0
-			"Show output image after saving",      # 1
-			"Repeat input file in image",          # 2
-			"Select position of manipulated bits"  # 3
+			"Console input as input file",          # 0
+			"Show output image after saving",       # 1
+			"Repeat input file in image",           # 2
+			"Select position of manipulated bits",  # 3
+			"Get lenght of hidden bits"             # 4
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
-		print(f"{title} {', '.join([ option.lower() for option, _ in selected ])}")
+		print(title, "\n- ".join([ option.lower() for option, _ in selected ]))
 		
 		# advanced options: read multiline text from console input
 		if selected_advOpt.get(0):
@@ -67,7 +68,12 @@ def main(*args):
 		else:
 			inputFilePath = consoleInputPath
 		
-		# hide file
+		# advanced option: get lenght of hidden bits
+		if selected_advOpt.get(4):
+			lenght = len(file2BitArray(inputFilePath))
+			print(f"Lenght of hidden bits: {lenght}")
+		
+		# hide file in image
 		error = hideFileInImage(
 			inputImagePath,
 			outputImagePath,
@@ -84,12 +90,13 @@ def main(*args):
 		# select: advanced options
 		title = "Advanced options:"
 		options = [
-			"Show extracted file (img / txt)",     # 0
-			"Select position of manipulated bits"  # 1
+			"Show extracted file (img / txt)",      # 0
+			"Select position of manipulated bits",  # 1
+			"Set lenght of hidden bits"             # 2
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
-		print(f"{title} {', '.join([ option.lower() for option, _ in selected ])}")
+		print(title, "\n- ".join([ option.lower() for option, _ in selected ]))
 		
 		# advanced options: select position of manipulated bits
 		if selected_advOpt.get(1):
@@ -104,17 +111,26 @@ def main(*args):
 			pos = int(option[0])
 		else:
 			pos = "least"
-
+		
+		# advanced options: set lenght of hidden bits
+		if selected_advOpt.get(2):
+			while not (lenghtInput := input("Lenght of hidden bits: ")).isdigit():
+				pass
+			lenght = int(lenghtInput)
+		else:
+			lenght = None
+		
 		# get file paths without " or '
 		inputImagePath = abspath(input("Input image path:\t").replace('"', '').replace("'", ""))
 		outputFilePath = abspath(input("Output file path:\t").replace('"', '').replace("'", ""))
 
-		# seek file
+		# seek file in image
 		error = seekFileInImage(
 			inputImagePath,
 			outputFilePath,
-			# advanced options: pos
-			pos = pos
+			# advanced options: pos, lenght
+			pos = pos,
+			lenght = lenght
 		)
 		print(Fore.RED+"error occured" if error else Fore.GREEN+"file saved")
 		
@@ -123,7 +139,7 @@ def main(*args):
 			# try for txt
 			try:
 				with open(outputFilePath, "r", encoding="utf-8") as fobj:
-					extractedText = fobj.read(100)
+					extractedText = fobj.read( min(lenght // 8, 100) )
 				print(f"Extracted Text:\n{extractedText}")
 			except UnicodeDecodeError:
 				print("can't open as text file")

@@ -85,10 +85,10 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 		raise TypeError(f"pos={type(pos)} must be of type int or a specific str")
 	if type(bigEndian) is not bool:
 		raise TypeError(f"bigEndian={type(bigEndian)} must be of type bool")
+	# get bits string and it's lenght
+	bitsString = f"{bits:0>8b}"
+	bitsLen = len(bitsString)
 	# check values
-	bitsLen = len(f"{bits:b}")
-	if bitsLen < 1:
-		raise ValueError(f"{bits=:b} must have at least one digit")
 	posLiterals = {
 		("least", True ): -1,
 		("most" , True ):  0,
@@ -104,7 +104,6 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 		if not (0 <= pos <= bitsLen-1) and not (-bitsLen <= pos <= -1):
 			raise ValueError(f"{pos=} must be between 0 and {bitsLen-1} or between {-bitsLen} and -1")
 	# get bit; TODO: use bit-shifting
-	bitsString = f"{bits:0>8b}"
 	bit = bool(int(bitsString[pos]))
 	# return bit as bool
 	return bit
