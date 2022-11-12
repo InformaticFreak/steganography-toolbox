@@ -27,3 +27,24 @@ Extrated Text:
 
 [extracted.txt](test/extracted.txt)
 
+```
+dbkefnsd,
+alles klappt 
+😂
+QUIT
+EOF
+dbkefnsd,
+alles klappt 
+😂
+QUIT
+EOF
+dbkefnsd,
+alles klappt 
+😂
+QUIT
+EOF
+
+...
+
+```
+
