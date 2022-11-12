@@ -104,9 +104,10 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 		if not (0 <= pos <= bitsLen-1) and not (-bitsLen <= pos <= -1):
 			raise ValueError(f"{pos=} must be between 0 and {bitsLen-1} or between {-bitsLen} and -1")
 	# get bit; TODO: use bit-shifting
-	bitsString = f"{bits:b}"
-	# return bit at given position as bool
-	return bool(int(bitsString[pos]))
+	bitsString = f"{bits:0>8b}"
+	bit = bool(int(bitsString[pos]))
+	# return bit as bool
+	return bit
 
 """
 image <-> array functions

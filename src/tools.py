@@ -95,7 +95,7 @@ def seekBitsInImage(image:Image.Image, *, pos:int="least", lenght:int=None, prog
 	# check types
 	if type(image) is not Image.Image:
 		raise TypeError(f"image={type(image)} must be of type Image.Image")
-	if type(lenght) not in (int, NoneType):
+	if type(lenght) not in (int, type(None)):
 		raise TypeError(f"lenght={type(lenght)} must be of type int or None")
 	if type(progressBar) not in (tqdm, bool):
 		raise TypeError(f"progressBar={type(progressBar)} must be of type tqdm or bool")
@@ -153,7 +153,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, pos:int="least", 
 		raise TypeError(f"outputFilePath={type(outputFilePath)} must be of type str")
 	if type(pos) not in (int, str):
 		raise TypeError(f"pos={type(pos)} must be of type int or a specific str")
-	if type(lenght) not in (int, NoneType):
+	if type(lenght) not in (int, type(None)):
 		raise TypeError(f"lenght={type(lenght)} must be of type int or None")
 	# load image
 	inputImage = loadImage(inputImagePath)
