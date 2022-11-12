@@ -14,7 +14,7 @@ from tools import *
 from functions import *
 
 
-def generateTitle(*, width:int=80, height:int=7) -> list[str]:
+def generateTitle(*, width:int=80, height:int=5) -> list[str]:
 	# check types
 	if type(width) is not int:
 		raise TypeError(f"width={type(width)} must be of type int")
@@ -25,27 +25,36 @@ def generateTitle(*, width:int=80, height:int=7) -> list[str]:
 	titleLen = len(titleText)
 	title = Style.NORMAL+Fore.GREEN + titleText + Fore.RESET+Style.DIM
 	# check values
-	if width < len(titleText):
+	if width < titleLen:
 		raise ValueError(f"{width=} must be greater than {titleLen-1}")
 	if height < 1:
 		raise ValueError(f"{height=} must be greater than 0")
-	# possibile letters
+	# possibile letters, including density
 	letters = string.ascii_lowercase + string.ascii_uppercase + string.punctuation + string.digits + 100*" "
 	lettersLen = len(letters)
-	# possibile colors
+	# possibile colors, including density
 	colorsDark = [Fore.BLACK, Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.MAGENTA, Fore.RED, Fore.WHITE, Fore.YELLOW]
 	colorsLight = [Fore.LIGHTBLACK_EX, Fore.LIGHTBLUE_EX, Fore.LIGHTCYAN_EX, Fore.LIGHTGREEN_EX, Fore.LIGHTMAGENTA_EX, Fore.LIGHTRED_EX, Fore.LIGHTWHITE_EX, Fore.LIGHTYELLOW_EX]
 	colorsReset = [Fore.RESET for _ in range(20) ]
 	colors = [ *colorsDark, *colorsLight, *colorsReset ]
 	colorsLen = len(colors)
-	# generate lines with random characters and colors
+	# position for title
+	titleLineInd = height // 2
+	titleCharInd = (width - titleLen) // 2
+	# generate lines
 	lines = []
-	for lineInd in range(width):
+	for lineInd in range(height):
 		line = Style.DIM
-		for charInd in range(height):
-			line += colors[ randint(0, colorsLen-1) ]
-			line += letters[ randint(0, lettersLen-1) ]
-			# insert program name
+		for charInd in range(width):
+			# write title
+			if lineInd == titleLineInd and charInd == titleCharInd:
+				line += title
+			elif lineInd == titleLineInd and titleCharInd <= charInd <= titleCharInd + titleLen:
+				continue
+			# write random characters and colors
+			else:
+				line += colors[ randint(0, colorsLen-1) ]
+				line += letters[ randint(0, lettersLen-1) ]
 		lines.append(line)
 	# return generated ascii art
 	return lines
@@ -53,7 +62,7 @@ def generateTitle(*, width:int=80, height:int=7) -> list[str]:
 
 def main(*args):
 	# generate title as ascii art
-	ascii_art = generateTitle()
+	ascii_art = generateTitle(width=50, height=3)
 	print("\n".join(ascii_art))
 	
 	# select: action

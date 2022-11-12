@@ -1,5 +1,5 @@
 
-# Stenography Toolbox
+# ![Stenography Toolbox](img/title_small.png)
 
 A toolbox for steganography
 
@@ -7,7 +7,7 @@ A toolbox for steganography
 
 Console UI:
 
-![Console UI](usage.png)
+![Console UI](img/usage.png)
 
 Input image:
 
