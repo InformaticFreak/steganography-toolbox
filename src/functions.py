@@ -5,7 +5,7 @@ import numpy as np
 from os.path import abspath
 from bitarray import bitarray
 from PIL import Image
-from tqdm import tqdm
+
 
 """
 file <-> bitarray functions
@@ -154,4 +154,6 @@ def loadImage(path:str) -> Image:
 	if type(path) is not str:
 		raise TypeError(f"path={type(path)} must be of type str")
 	# return image object
-	return Image.open(path).convert("RGB")
+	image = Image.open(path)
+	image = image.convert("RGB")
+	return image
