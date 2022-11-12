@@ -17,22 +17,41 @@ def main(*args):
 	title = "Hide or Seek?"
 	options = ["Hide", "Seek"]
 	option, index = pick(options, title)
+	print(f"{title} {option}")
 	
 	# action: hide
 	if option == "Hide":
 		# select: advanced options
 		title = "Advanced options:"
 		options = [
+			"Console input as input file",
 			"Show output image after saving",
-			"Repeat input file in image"
+			"Repeat input file in image",
 		]
 		selected = pick(options, title, multiselect=True)
-		selected = { option.split(" ")[0].lower() for option, _ in selected }
+		selected = [ option.split(" ")[0].lower() for option, _ in selected ]
+		print(f"{title} {', '.join(selected)}")
+		
+		# read multiline text from console input
+		if "console" in selected:
+			print("Multiline input: ")
+			inputList = []
+			while text != "EOF":
+				text = input()
+				inputList.append(text)
+		# write input to temp file
+		consoleInputPath = joinPath("..", "tmp", "consoleInput.txt")
+		with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
+			fobj.write("\n".join(inputList))
 		
 		# get file paths without " or '
-		inputImagePath  = input("Input image path:  ").replace('"', '').replace("'", "")
+		inputImagePath = input("Input image path:  ").replace('"', '').replace("'", "")
 		outputImagePath = input("Output image path: ").replace('"', '').replace("'", "")
-		inputFilePath   = input("Input file path:   ").replace('"', '').replace("'", "")
+		# 
+		if "console" not in selected:
+			inputFilePath = input("Input file path:   ").replace('"', '').replace("'", "")
+		else:
+			inputImagePath = consoleInputPath
 		
 		# hide file
 		error = hideFileInImage(
