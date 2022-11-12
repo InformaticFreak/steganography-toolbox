@@ -19,7 +19,7 @@ def main(*args):
 		abspath(joinPath(testPath, "inputImage.png")),
 		abspath(joinPath(testPath, "outputImage.png")),
 		abspath(joinPath(testPath, "inputText.txt")),
-		repeat = False,
+		repeat = True,
 		show = False # show after saving image
 	)
 	print(Fore.RED+"error occured" if error else Fore.GREEN+"file saved")
