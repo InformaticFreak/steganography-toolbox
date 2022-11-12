@@ -1,9 +1,10 @@
 
 import os
 import numpy as np
-from bitarray import bitarray
 
+from bitarray import bitarray
 from PIL import Image
+from tqdm import tqdm
 
 from functions import *
 
@@ -32,12 +33,12 @@ def hideTextInImage(inputImagePath:str, outputImagePath:str, inputTextPath:str) 
 	for y in range(height):
 		for x in range(width):
 			# modify least significant bits
-			pixel = pixels[x][y]
+			pixel = pixels[y][x]
 			r = setBit(bits[textInd % bitsLen], pixel[0]); textInd += 1
 			g = setBit(bits[textInd % bitsLen], pixel[1]); textInd += 1
 			b = setBit(bits[textInd % bitsLen], pixel[2]); textInd += 1
-			pixels[x][y] = (r, g, b)
+			pixels[y][x] = (r, g, b)
 	# save image from array
 	outputImage = array2Image(pixels)
-	saveImage(os.path.abspath("out.png"), outputImage, show=True)
+	saveImage(outputImagePath, outputImage, show=True)
 	

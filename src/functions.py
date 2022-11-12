@@ -1,9 +1,10 @@
 
 import os
 import numpy as np
-from bitarray import bitarray
 
+from bitarray import bitarray
 from PIL import Image
+from tqdm import tqdm
 
 """
 file <-> bitarray functions
@@ -114,7 +115,8 @@ def image2Array(image:Image.Image) -> np.ndarray:
 	if type(image) is not Image.Image:
 		raise TypeError(f"image={type(image)} must be of type Image.Image")
 	# return image as array
-	return np.asarray(image)
+	imageArray = np.array(image)
+	return imageArray
 
 def array2Image(imageArray:np.ndarray) -> Image.Image:
 	# check types

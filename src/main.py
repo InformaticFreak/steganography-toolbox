@@ -8,6 +8,7 @@ from PIL import Image
 from colorama import Fore, Back, Style
 from colorama import init as coloramaInit
 from os.path import join as joinPath
+from tqdm import tqdm
 
 from functions import *
 from methods import *
