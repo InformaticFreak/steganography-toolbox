@@ -14,7 +14,21 @@ from tools import *
 from functions import *
 
 
-def generateTitle() -> list[str]:
+def generateTitle(*, width:int=80, height:int=7) -> list[str]:
+	# check types
+	if type(width) is not int:
+		raise TypeError(f"width={type(width)} must be of type int")
+	if type(height) is not int:
+		raise TypeError(f"height={type(height)} must be of type int")
+	# styled title
+	titleText = "  Steganography  Toolbox  "
+	titleLen = len(titleText)
+	title = Style.NORMAL+Fore.GREEN + titleText + Fore.RESET+Style.DIM
+	# check values
+	if width < len(titleText):
+		raise ValueError(f"{width=} must be greater than {titleLen-1}")
+	if height < 1:
+		raise ValueError(f"{height=} must be greater than 0")
 	# possibile letters
 	letters = string.ascii_lowercase + string.ascii_uppercase + string.punctuation + string.digits + 100*" "
 	lettersLen = len(letters)
@@ -26,17 +40,13 @@ def generateTitle() -> list[str]:
 	colorsLen = len(colors)
 	# generate lines with random characters and colors
 	lines = []
-	for _ in range(7):
+	for lineInd in range(width):
 		line = Style.DIM
-		for _ in range(80):
+		for charInd in range(height):
 			line += colors[ randint(0, colorsLen-1) ]
 			line += letters[ randint(0, lettersLen-1) ]
+			# insert program name
 		lines.append(line)
-	# insert program name
-	title = " Steganography  Toolbox "
-	before = lines[3][:28]
-	after = lines[3][51:]
-	lines[3] = Style.DIM + before + Style.RESET_ALL+Fore.GREEN + title + Fore.RESET+Style.DIM + after
 	# return generated ascii art
 	return lines
 
