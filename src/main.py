@@ -36,9 +36,11 @@ def main(*args):
 		if "console" in selected:
 			print("Multiline input: ")
 			inputList = []
+			text = ""
 			while text != "EOF":
 				text = input()
 				inputList.append(text)
+			inputList.append("\n")
 		# write input to temp file
 		consoleInputPath = joinPath("..", "tmp", "consoleInput.txt")
 		with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
@@ -51,7 +53,7 @@ def main(*args):
 		if "console" not in selected:
 			inputFilePath = input("Input file path:   ").replace('"', '').replace("'", "")
 		else:
-			inputImagePath = consoleInputPath
+			inputFilePath = consoleInputPath
 		
 		# hide file
 		error = hideFileInImage(
