@@ -1,54 +1,51 @@
 
 # ![Stenography Toolbox](img/title_big.png)
 
-A toolbox for steganography
+A toolbox for steganography:
+
+- [x] Hide file in image
+- [ ] Hide file in audio
 
 ## Demo
 
-Console UI:
+### Hide text in image
 
-![Console UI](img/usage.png)
+![usage hide](img/usage_hide.png)
 
 Input image:
 
-![Input image](test/code.png)
+![input image](test/pexels-johannes-plenio-1146706.jpg)
 
-Input Text:
+Input text:
 
 ```
-dbkefnsd,
-alles klappt 
-😂
-QUIT
+Hello, World!
 EOF
 ```
 
-Output Image:
+Output image:
 
-![Output image](test/code_out.png)
+![output image](test/tree.png)
 
-Extrated Text:
+Extrated text:
 
 [extracted.txt](test/extracted.txt)
 
 ```
-dbkefnsd,
-alles klappt 
-😂
-QUIT
-EOF
-dbkefnsd,
-alles klappt 
-😂
-QUIT
-EOF
-dbkefnsd,
-alles klappt 
-😂
-QUIT
-EOF
+Hello, World!
+
+Hello, World!
+
+Hello, World!
+
+Hello, World!
+
+Hello, World!
+
+Hello, World!
+
+Hello, Wor
 
 ...
 
 ```
-

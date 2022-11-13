@@ -150,7 +150,7 @@ def main(*args):
 			# try for txt
 			try:
 				with open(outputFilePath, "r", encoding="utf-8") as fobj:
-					extractedText = fobj.read( min(lenght // 8, 100) )
+					extractedText = fobj.read( lenght//8 if lenght else 100 )
 				print(f"{Fore.CYAN}Extracted Text:\n{Fore.RESET}{extractedText}")
 			except UnicodeDecodeError:
 				print(f"{Fore.RED}can't open as text file")

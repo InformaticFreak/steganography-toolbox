@@ -63,6 +63,7 @@ def hideBitsInImage(image:Image.Image, bits:bitarray, *, repeat:bool=True, pos:i
 			break
 	# close progress bar
 	if type(progressBar) is bool and progressBar:
+		pbar.colour = "#8ce10b"
 		pbar.close()
 	# return array as image
 	return array2Image(pixels)
@@ -146,6 +147,7 @@ def seekBitsInImage(image:Image.Image, *, pos:int="least", lenght:int=None, prog
 			break
 	# close progress bar
 	if type(progressBar) is bool and progressBar:
+		pbar.colour = "#8ce10b"
 		pbar.close()
 	# return bits as bitarray
 	return bits
