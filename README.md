@@ -27,6 +27,8 @@ Output image:
 
 ![output image](test/tree.png)
 
+![usage seek](img/usage_seek.png)
+
 Extrated text:
 
 [extracted.txt](test/extracted.txt)
