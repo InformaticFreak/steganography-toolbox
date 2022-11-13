@@ -13,14 +13,14 @@ from functions import *
 
 def main(*args):
 	# generate title as ascii art
-	ascii_art = generateTitle(width=50, height=3)
-	print("\n".join(ascii_art))
+	ascii_art = generateTitle()
+	print("\n", "\n".join(ascii_art), "\n")
 	
 	# select: action
 	title = "Hide or Seek?"
 	options = ["Hide", "Seek"]
 	option, index = pick(options, title)
-	print(f"{title} {option}")
+	print(f"{Fore.BLUE}{title} {Fore.RESET}{option}")
 	
 	# action: hide
 	if option == "Hide":
@@ -35,46 +35,50 @@ def main(*args):
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
-		print(title, "\n- ".join([ option.lower() for option, _ in selected ]))
+		if len(selected) > 0:
+			print(f"{Fore.BLUE}{title}{Fore.RESET}\n{Fore.RESET}-", "\n- ".join([ option.lower() for option, _ in selected ]))
+		else:
+			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
 		# advanced options: read multiline text from console input
 		if selected_advOpt.get(0):
-			print("Multiline input: ")
+			print(Fore.BLUE+"Multiline input: ")
 			inputList = []
 			while (text := input()) != "EOF":
 				inputList.append(text)
 			inputList.append("\n")
-		# write input to temp file
-		consoleInputPath = joinPath("..", "tmp", "consoleInput.txt")
-		with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
-			fobj.write("\n".join(inputList))
+			# write input to temp file
+			consoleInputPath = joinPath("..", "tmp", "consoleInput.txt")
+			with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
+				fobj.write("\n".join(inputList))
 		
 		# advanced options: select position of manipulated bits
 		if selected_advOpt.get(3):
-			title = "Position of manipulated bits"
+			title = "Position of manipulated bits:"
 			options = [
 				"0 (most significant bit)",
 				"1", "2", "3", "4", "5", "6",
 				"7 (least significant bit)"
 			]
+			optionRating = { label: color for label, color in zip(options, [ *([Fore.RED]*3), *([Fore.YELLOW]*3), *([Fore.GREEN]*3) ]) }
 			option, index = pick(options, title)
-			print(f"{title} {option}")
+			print(f"{Fore.BLUE}{title} {Fore.RESET}{optionRating.get(option)}{option}")
 			pos = int(option[0])
 		else:
 			pos = "least"
 		
 		# get file paths without " or '
-		inputImagePath  = abspath(input("Input image path:\t").replace('"', '').replace("'", ""))
-		outputImagePath = abspath(input("Output image path:\t").replace('"', '').replace("'", ""))
+		inputImagePath  = abspath(input(f"{Fore.BLUE}Input image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
+		outputImagePath = abspath(input(f"{Fore.BLUE}Output image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
 		if not selected_advOpt.get(0):
-			inputFilePath = abspath(input("Input file path:\t").replace('"', '').replace("'", ""))
+			inputFilePath = abspath(input(f"{Fore.BLUE}Input file path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
 		else:
 			inputFilePath = consoleInputPath
 		
 		# advanced option: get lenght of hidden bits
 		if selected_advOpt.get(4):
 			lenght = len(file2BitArray(inputFilePath))
-			print(f"Lenght of hidden bits: {lenght}")
+			print(f"{Fore.CYAN}Lenght of hidden bits: {Fore.RESET}{lenght}")
 		
 		# hide file in image
 		error = hideFileInImage(
@@ -86,7 +90,7 @@ def main(*args):
 			repeat = bool(selected_advOpt.get(2)),
 			pos = pos
 		)
-		print(Fore.RED+"error occured" if error else Fore.GREEN+"file saved")
+		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
 	
 	# action: seek
 	elif option == "Seek":
@@ -99,33 +103,37 @@ def main(*args):
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
-		print(title, "\n- ".join([ option.lower() for option, _ in selected ]))
+		if len(selected) > 0:
+			print(f"{Fore.BLUE}{title}{Fore.RESET}\n{Fore.RESET}-", "\n- ".join([ option.lower() for option, _ in selected ]))
+		else:
+			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
 		# advanced options: select position of manipulated bits
 		if selected_advOpt.get(1):
-			title = "Position of manipulated bits"
+			title = "Position of manipulated bits:"
 			options = [
 				"0 (most significant bit)",
 				"1", "2", "3", "4", "5", "6",
 				"7 (least significant bit)"
 			]
+			optionRating = { label: color for label, color in zip(options, [ *([Fore.RED]*3), *([Fore.YELLOW]*3), *([Fore.GREEN]*3) ]) }
 			option, index = pick(options, title)
-			print(f"{title} {option}")
+			print(f"{Fore.BLUE}{title} {Fore.RESET}{optionRating.get(option)}{option}")
 			pos = int(option[0])
 		else:
 			pos = "least"
 		
 		# advanced options: set lenght of hidden bits
 		if selected_advOpt.get(2):
-			while not (lenghtInput := input("Lenght of hidden bits: ")).isdigit():
+			while not (lenghtInput := input(f"{Fore.BLUE}Lenght of hidden bits: {Fore.RESET}")).isdigit():
 				pass
 			lenght = int(lenghtInput)
 		else:
 			lenght = None
 		
 		# get file paths without " or '
-		inputImagePath = abspath(input("Input image path:\t").replace('"', '').replace("'", ""))
-		outputFilePath = abspath(input("Output file path:\t").replace('"', '').replace("'", ""))
+		inputImagePath = abspath(input(f"{Fore.BLUE}Input image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
+		outputFilePath = abspath(input(f"{Fore.BLUE}Output file path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
 
 		# seek file in image
 		error = seekFileInImage(
@@ -135,7 +143,7 @@ def main(*args):
 			pos = pos,
 			lenght = lenght
 		)
-		print(Fore.RED+"error occured" if error else Fore.GREEN+"file saved")
+		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
 		
 		# advanced options: show extracted file
 		if selected_advOpt.get(0):
@@ -143,9 +151,9 @@ def main(*args):
 			try:
 				with open(outputFilePath, "r", encoding="utf-8") as fobj:
 					extractedText = fobj.read( min(lenght // 8, 100) )
-				print(f"Extracted Text:\n{extractedText}")
+				print(f"{Fore.CYAN}Extracted Text:\n{Fore.RESET}{extractedText}")
 			except UnicodeDecodeError:
-				print("can't open as text file")
+				print(f"{Fore.RED}can't open as text file")
 			except Exception as exc:
 				raise exc
 			# try for img
@@ -153,7 +161,7 @@ def main(*args):
 				extractedImage = loadImage(outputFilePath)
 				extractedImage.show()
 			except UnidentifiedImageError:
-				print("can't open as image file")
+				print(f"{Fore.RED}can't open as image file")
 			except Exception as exc:
 				raise exc
 
