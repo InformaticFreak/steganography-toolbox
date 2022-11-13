@@ -91,6 +91,10 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 	# return if saving was successful
 	return not error
 
+"""
+seek functions
+"""
+
 def seekBitsInImage(image:Image.Image, *, pos:int="least", lenght:int=None, progressBar:tqdm=True, **kwargs_pbar) -> bitarray:
 	# check types
 	if type(image) is not Image.Image:

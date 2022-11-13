@@ -1,10 +1,12 @@
 
-import os
+import os, string
 import numpy as np
 
+from random import randint
 from os.path import abspath
 from bitarray import bitarray
 from PIL import Image
+from colorama import Fore, Back, Style
 
 
 """
@@ -158,3 +160,52 @@ def loadImage(path:str) -> Image:
 	image = Image.open(path)
 	image = image.convert("RGB")
 	return image
+
+"""
+styling functions
+"""
+
+def generateTitle(*, width:int=80, height:int=5) -> list[str]:
+	# check types
+	if type(width) is not int:
+		raise TypeError(f"width={type(width)} must be of type int")
+	if type(height) is not int:
+		raise TypeError(f"height={type(height)} must be of type int")
+	# styled title
+	titleText = "  Steganography  Toolbox  "
+	titleLen = len(titleText)
+	title = Style.NORMAL+Fore.GREEN + titleText + Fore.RESET+Style.DIM
+	# check values
+	if width < titleLen:
+		raise ValueError(f"{width=} must be greater than {titleLen-1}")
+	if height < 1:
+		raise ValueError(f"{height=} must be greater than 0")
+	# possibile letters, including density
+	letters = string.ascii_lowercase + string.ascii_uppercase + string.punctuation + string.digits + 100*" "
+	lettersLen = len(letters)
+	# possibile colors, including density
+	colorsDark = [Fore.BLACK, Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.MAGENTA, Fore.RED, Fore.WHITE, Fore.YELLOW]
+	colorsLight = [Fore.LIGHTBLACK_EX, Fore.LIGHTBLUE_EX, Fore.LIGHTCYAN_EX, Fore.LIGHTGREEN_EX, Fore.LIGHTMAGENTA_EX, Fore.LIGHTRED_EX, Fore.LIGHTWHITE_EX, Fore.LIGHTYELLOW_EX]
+	colorsReset = [Fore.RESET for _ in range(20) ]
+	colors = [ *colorsDark, *colorsLight, *colorsReset ]
+	colorsLen = len(colors)
+	# position for title
+	titleLineInd = height // 2
+	titleCharInd = (width - titleLen) // 2
+	# generate lines
+	lines = []
+	for lineInd in range(height):
+		line = Style.DIM
+		for charInd in range(width):
+			# write title
+			if lineInd == titleLineInd and charInd == titleCharInd:
+				line += title
+			elif lineInd == titleLineInd and titleCharInd <= charInd <= titleCharInd + titleLen:
+				continue
+			# write random characters and colors
+			else:
+				line += colors[ randint(0, colorsLen-1) ]
+				line += letters[ randint(0, lettersLen-1) ]
+		lines.append(line)
+	# return generated ascii art
+	return lines
