@@ -47,5 +47,4 @@ Hello, World!
 Hello, Wor
 
 ...
-
 ```
