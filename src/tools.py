@@ -88,7 +88,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, pos:int="least", 
 	# load image
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
-	pixels = image2Array(image)
+	pixels = image2Array(inputImage)
 	# check values
 	if lenght is not None:
 		if not (0 <= lenght <= width*height):
