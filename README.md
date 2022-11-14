@@ -6,6 +6,12 @@ A toolbox for steganography:
 - [x] Hide file in image
 - [ ] Hide file in audio
 
+## Requirements
+
+```
+python -m pip install -r requirements.txt
+```
+
 ## Demo
 
 ### Hide text in image
