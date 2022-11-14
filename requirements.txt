@@ -1,0 +1,6 @@
+PIL
+pick
+colorama
+bitarray
+numpy
+tqdm
