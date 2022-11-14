@@ -95,7 +95,7 @@ def main(*args):
 	# action: seek
 	elif option == "Seek":
 		# select: options
-		title = "options:"
+		title = "Options:"
 		options = [
 			"Show extracted file (image / text)",   # 0
 			"Select position of manipulated bits",  # 1
