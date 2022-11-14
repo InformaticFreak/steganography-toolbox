@@ -52,7 +52,5 @@ Hello, World!
 
 Hello, World!
 
-Hello, Wor
-
-...
+Hello, Wor...
 ```
