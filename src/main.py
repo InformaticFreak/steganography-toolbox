@@ -24,8 +24,8 @@ def main(*args):
 	
 	# action: hide
 	if option == "Hide":
-		# select: advanced options
-		title = "Advanced options:"
+		# select: options
+		title = "Options:"
 		options = [
 			"Console input as input file",          # 0
 			"Show output image after saving",       # 1
@@ -40,7 +40,7 @@ def main(*args):
 		else:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
-		# advanced options: read multiline text from console input
+		# options: read multiline text from console input
 		if selected_advOpt.get(0):
 			print(Fore.BLUE+"Multiline input: ")
 			inputList = []
@@ -52,7 +52,7 @@ def main(*args):
 			with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
 				fobj.write("\n".join(inputList))
 		
-		# advanced options: select position of manipulated bits
+		# options: select position of manipulated bits
 		if selected_advOpt.get(3):
 			title = "Position of manipulated bits:"
 			options = [
@@ -75,7 +75,7 @@ def main(*args):
 		else:
 			inputFilePath = consoleInputPath
 		
-		# advanced option: get lenght of hidden bits
+		# option: get lenght of hidden bits
 		if selected_advOpt.get(4):
 			lenght = len(file2BitArray(inputFilePath))
 			print(f"{Fore.CYAN}Lenght of hidden bits: {Fore.RESET}{lenght}")
@@ -85,7 +85,7 @@ def main(*args):
 			inputImagePath,
 			outputImagePath,
 			inputFilePath,
-			# advanced options: show, repeat, pos
+			# options: show, repeat, pos
 			show = bool(selected_advOpt.get(1)),
 			repeat = bool(selected_advOpt.get(2)),
 			pos = pos
@@ -94,10 +94,10 @@ def main(*args):
 	
 	# action: seek
 	elif option == "Seek":
-		# select: advanced options
-		title = "Advanced options:"
+		# select: options
+		title = "options:"
 		options = [
-			"Show extracted file (img / txt)",      # 0
+			"Show extracted file (image / text)",   # 0
 			"Select position of manipulated bits",  # 1
 			"Set lenght of hidden bits"             # 2
 		]
@@ -108,7 +108,7 @@ def main(*args):
 		else:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
-		# advanced options: select position of manipulated bits
+		# options: select position of manipulated bits
 		if selected_advOpt.get(1):
 			title = "Position of manipulated bits:"
 			options = [
@@ -123,7 +123,7 @@ def main(*args):
 		else:
 			pos = "least"
 		
-		# advanced options: set lenght of hidden bits
+		# options: set lenght of hidden bits
 		if selected_advOpt.get(2):
 			while not (lenghtInput := input(f"{Fore.BLUE}Lenght of hidden bits: {Fore.RESET}")).isdigit():
 				pass
@@ -139,15 +139,15 @@ def main(*args):
 		error = seekFileInImage(
 			inputImagePath,
 			outputFilePath,
-			# advanced options: pos, lenght
+			# options: pos, lenght
 			pos = pos,
 			lenght = lenght
 		)
 		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
 		
-		# advanced options: show extracted file
+		# options: show extracted file
 		if selected_advOpt.get(0):
-			# try for txt
+			# try for text
 			try:
 				with open(outputFilePath, "r", encoding="utf-8") as fobj:
 					extractedText = fobj.read( lenght//8 if lenght else 100 )
@@ -156,7 +156,7 @@ def main(*args):
 				print(f"{Fore.RED}can't open as text file")
 			except Exception as exc:
 				raise exc
-			# try for img
+			# try for image
 			try:
 				extractedImage = loadImage(outputFilePath)
 				extractedImage.show()
