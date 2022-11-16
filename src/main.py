@@ -1,5 +1,5 @@
 
-import os, sys
+import os, sys, re
 
 from PIL import UnidentifiedImageError
 from pick import pick
@@ -29,7 +29,7 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 		text = ""
 		bitPatternList = []
 		while len(bitPatternList) < 1:
-			text = input("Bit pattern: ")
+			text = input(f"{Fore.BLUE}Bit pattern: {Fore.RESET}")
 			bitPatternList = pattern.findall(text.lower())
 		bitPatternList = [ (int(el) if el.isdigit() else el) for el in bitPatternList ]
 	else:
@@ -41,7 +41,7 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 		text = ""
 		colorPatternList = []
 		while len(colorPatternList) < 1:
-			text = input("Color channel pattern: ")
+			text = input(f"{Fore.BLUE}Color channel pattern: {Fore.RESET}")
 			colorPatternList = pattern.findall(text.lower())
 		colorPatternList = [ (int(el) if el.isdigit() else el) for el in colorPatternList ]
 	else:
@@ -156,8 +156,9 @@ def main(*args, **kwargs):
 		error = seekFileInImage(
 			inputImagePath,
 			outputFilePath,
-			# options: pos, lenght
-			pos = pos,
+			# options: bitPattern, colorPattern, lenght
+			bitPattern = bitPatternList,
+			colorPattern = colorPatternList,
 			lenght = lenght
 		)
 		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
