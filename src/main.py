@@ -31,21 +31,21 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 		while len(bitPatternList) < 1:
 			text = input(f"{Fore.BLUE}Bit pattern: {Fore.RESET}")
 			bitPatternList = pattern.findall(text.lower())
-		bitPatternList = [ (int(el) if el.isdigit() else el) for el in bitPatternList ]
+		bitPatternList = [ ( int(el) if el.isdigit() else el ) for el in bitPatternList ]
 	else:
 		bitPatternList =  ["least"]
 	
 	# advanced options: set color channel pattern
 	if selected_advOpt.get(1):
-		pattern = re.compile(r"[0-2]|r|g|b")
+		pattern = re.compile(r"[0-2rgb]{1,3}")
 		text = ""
 		colorPatternList = []
 		while len(colorPatternList) < 1:
 			text = input(f"{Fore.BLUE}Color channel pattern: {Fore.RESET}")
 			colorPatternList = pattern.findall(text.lower())
-		colorPatternList = [ (int(el) if el.isdigit() else el) for el in colorPatternList ]
+		colorPatternList = [ tuple( ( int(val) if val.isdigit() else val ) for val in el ) for el in colorPatternList ]
 	else:
-		colorPatternList =  ["r", "g", "b"]
+		colorPatternList =  [("r", "g", "b")]
 	
 	# return option results
 	return bitPatternList, colorPatternList
