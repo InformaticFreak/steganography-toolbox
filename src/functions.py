@@ -183,7 +183,7 @@ def generateTitle(*, width:int=80, height:int=5) -> list[str]:
 	# possibile colors, including density
 	colorsDark = [Fore.BLACK, Fore.BLUE, Fore.CYAN, Fore.GREEN, Fore.MAGENTA, Fore.RED, Fore.WHITE, Fore.YELLOW]
 	colorsLight = [Fore.LIGHTBLACK_EX, Fore.LIGHTBLUE_EX, Fore.LIGHTCYAN_EX, Fore.LIGHTGREEN_EX, Fore.LIGHTMAGENTA_EX, Fore.LIGHTRED_EX, Fore.LIGHTWHITE_EX, Fore.LIGHTYELLOW_EX]
-	colorsReset = [Fore.RESET for _ in range(20) ]
+	colorsReset = [ Fore.RESET for _ in range(20) ]
 	colors = [ *colorsDark, *colorsLight, *colorsReset ]
 	colorsLen = len(colors)
 	# position for title
