@@ -118,10 +118,15 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 	# check inner types
 	for ind, el in enumerate(bitPattern):
 		if type(el) not in (int, str):
-			raise ValueError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
+			raise TypeError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
 	for ind, el in enumerate(colorPattern):
-		if type(el) not in (int, str):
-			raise ValueError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type int or a specific str")
+		if type(el) not in (tuple, list):
+			raise TypeError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type tuple")
+		if not (1 <= len(el) <= 3): # check inner values
+			raise ValueError(f"colorPattern[{ind}]={colorPattern[ind]} must contain between 1 and 3 elements")
+		for ind2, el2 in enumerate(el):
+			if type(el2) not in (int, str):
+				raise TypeError(f"colorPattern[{ind}][{ind2}]={type(colorPattern[ind][ind2])} must be of type int or specific str")
 	# load image
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
