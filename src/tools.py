@@ -84,7 +84,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		for x in range(width):
 			# break if end of bits reached and repeat is False
 			if not repeat and bitsInd >= bitsLen:
-				pbar.total = bitsInd // 3
+				pbar.total = y * width + x
 				BREAK = True
 				break
 			# modify bits according to the given bit and color channel patterns
@@ -184,7 +184,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 		for x in range(width):
 			# break if end of bits reached and repeat is False
 			if bitsInd >= lenght:
-				pbar.total = bitsInd // 3
+				pbar.total = y * width + x
 				BREAK = True
 				break
 			# get bits according to the given bit and color channel patterns
