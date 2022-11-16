@@ -31,7 +31,7 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 		while len(bitPatternList) < 1:
 			text = input(f"{Fore.BLUE}Bit pattern: {Fore.RESET}")
 			bitPatternList = pattern.findall(text.lower())
-		bitPatternList = [ ( int(el) if el.isdigit() else el ) for el in bitPatternList ]
+		bitPatternList = [ (int(el) if el.isdigit() else el) for el in bitPatternList ]
 	else:
 		bitPatternList =  ["least"]
 	
@@ -43,9 +43,9 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 		while len(colorPatternList) < 1:
 			text = input(f"{Fore.BLUE}Color channel pattern: {Fore.RESET}")
 			colorPatternList = pattern.findall(text.lower())
-		colorPatternList = [ tuple( ( int(val) if val.isdigit() else val ) for val in el ) for el in colorPatternList ]
+		colorPatternList = [ [ (int(val) if val.isdigit() else val) for val in el ] for el in colorPatternList ]
 	else:
-		colorPatternList =  [("r", "g", "b")]
+		colorPatternList =  [["r", "g", "b"]]
 	
 	# return option results
 	return bitPatternList, colorPatternList

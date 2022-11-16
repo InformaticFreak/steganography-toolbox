@@ -13,7 +13,7 @@ from functions import *
 hide functions
 """
 
-def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, bitPattern:list[int]=["least"], colorPattern:list[tuple[int]]=[("r","g","b")], **kwargs_save) -> bool:
+def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, bitPattern:list[int]=["least"], colorPattern:list[list[int]]=[("r","g","b")], **kwargs_save) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
@@ -38,25 +38,25 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 			raise TypeError(f"bitPattern[{bitPosInd}]={type(bitPattern[bitPosInd])} must be of type int or a specific str")
 	channelLiterals = {"r": 0, "g": 1, "b": 2}
 	for colPxInd, colPx in enumerate(colorPattern):
-		if type(colPx) not in (tuple, list):
-			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type tuple")
+		if type(colPx) is not list:
+			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type list")
 		# check inner values
 		if not (1 <= len(colPx) <= 3):
 			raise ValueError(f"colorPattern[{colPxInd}]={colorPattern[colPxInd]} must contain between 1 and 3 elements")
-		for colValInd, colVal in enumerate(colPx):
+		for colChnInd, colChn in enumerate(colPx):
 			# check inner values
-			if type(colVal) is str:
-				colValInteger = channelLiterals.get(colVal)
+			if type(colChn) is str:
+				colValInteger = channelLiterals.get(colChn)
 				if colValInteger is None:
-					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be 'r', 'g' or 'b' if str")
+					raise ValueError(f"colorPattern[{colPxInd}][{colChnInd}]={colorPattern[colPxInd][colChnInd]} must be 'r', 'g' or 'b' if str")
 				else:
-					colorPattern[colPxInd][colValInd] = colValInteger
-			elif type(colVal) is int:
-				if not (0 <= colVal <= 2):
-					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be between 0 and 2")
+					colorPattern[colPxInd][colChnInd] = colValInteger
+			elif type(colChn) is int:
+				if not (0 <= colChn <= 2):
+					raise ValueError(f"colorPattern[{colPxInd}][{colChnInd}]={colorPattern[colPxInd][colChnInd]} must be between 0 and 2 if int")
 			# check inner type
 			else:
-				raise TypeError(f"colorPattern[{colPxInd}][{colValInd}]={type(colorPattern[colPxInd][colValInd])} must be of type int or specific str")
+				raise TypeError(f"colorPattern[{colPxInd}][{colChnInd}]={type(colorPattern[colPxInd][colChnInd])} must be of type int or specific str")
 	# load image to array
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
@@ -87,12 +87,13 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 				pbar.total = bitsInd // 3
 				BREAK = True
 				break
-			# modify bits
+			# modify bits according to the given bit and color channel patterns
 			pixel = pixels[y][x]
-			r = setBit(bits[bitsInd % bitsLen], pixel[0], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
-			g = setBit(bits[bitsInd % bitsLen], pixel[1], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
-			b = setBit(bits[bitsInd % bitsLen], pixel[2], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
-			pixels[y][x] = (r, g, b)
+			newPixel = list(pixel)
+			for channel in colorPattern[bitsInd % colorPatternLen]:
+				newPixel[channel] = setBit(bits[bitsInd % bitsLen], pixel[channel], pos=bitPattern[bitsInd % bitPatternLen])
+				bitsInd += 1
+			pixels[y][x] = tuple(newPixel)
 			# update counters
 			pbarUpdate()
 		# break if inner loop breaks
@@ -111,7 +112,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 seek functions
 """
 
-def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[int]=["least"], colorPattern:list[tuple[int]]=[("r","g","b")], lenght:int=None) -> bool:
+def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[int]=["least"], colorPattern:list[list[int]]=[("r","g","b")], lenght:int=None) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
@@ -134,8 +135,8 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 			raise TypeError(f"bitPattern[{bitPosInd}]={type(bitPattern[bitPosInd])} must be of type int or a specific str")
 	channelLiterals = {"r": 0, "g": 1, "b": 2}
 	for colPxInd, colPx in enumerate(colorPattern):
-		if type(colPx) not in (tuple, list):
-			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type tuple")
+		if type(colPx) is not list:
+			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type list")
 		# check inner values
 		if not (1 <= len(colPx) <= 3):
 			raise ValueError(f"colorPattern[{colPxInd}]={colorPattern[colPxInd]} must contain between 1 and 3 elements")
@@ -149,7 +150,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 					colorPattern[colPxInd][colValInd] = colValInteger
 			elif type(colVal) is int:
 				if not (0 <= colVal <= 2):
-					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be between 0 and 2")
+					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be between 0 and 2 if int")
 			# check inner type
 			else:
 				raise TypeError(f"colorPattern[{colPxInd}][{colValInd}]={type(colorPattern[colPxInd][colValInd])} must be of type int or specific str")
@@ -186,11 +187,11 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 				pbar.total = bitsInd // 3
 				BREAK = True
 				break
-			# get bits
+			# get bits according to the given bit and color channel patterns
 			pixel = pixels[y][x]
-			bits.append(getBit(pixel[0], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
-			bits.append(getBit(pixel[1], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
-			bits.append(getBit(pixel[2], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
+			for channel in colorPattern[bitsInd % colorPatternLen]:
+				bits.append(getBit(pixel[channel], pos=bitPattern[bitsInd % bitPatternLen]))
+				bitsInd += 1
 			# update counters
 			pbarUpdate()
 		# break if inner loop breaks
