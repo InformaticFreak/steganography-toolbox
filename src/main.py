@@ -126,8 +126,8 @@ def main(*args, **kwargs):
 		# select: options
 		title = "Options:"
 		options = [
-			"Show extracted file (image / text)",   # 0
-			"Set lenght of hidden bits"             # 1
+			"Show extracted file (image / text)",  # 0
+			"Set lenght of hidden bits"            # 1
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
