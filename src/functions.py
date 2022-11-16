@@ -71,7 +71,7 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 	elif type(pos) is int:
 		if not (0 <= pos <= 7) and not (-8 <= pos <= -1):
 			raise ValueError(f"{pos=} must be between 0 and 7 or between -8 and -1")
-	# set bit; TODO: use bit-shifting
+	# set bit
 	bitsStr = f"{bits:0>8b}"
 	bitsList = [ char for char in bitsStr ]
 	bitsList[pos] = str(int(bit))
@@ -101,7 +101,7 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 	elif type(pos) is int:
 		if not (0 <= pos <= 7) and not (-8 <= pos <= -1):
 			raise ValueError(f"{pos=} must be between 0 and 7 or between -8 and -1")
-	# get bit; TODO: use bit-shifting
+	# get bit
 	bitsString = f"{bits:0>8b}"
 	bit = bool(int(bitsString[pos]))
 	# return bit as bool

@@ -162,8 +162,6 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 	if lenght is not None:
 		if not (0 <= lenght <= width*height):
 			raise ValueError(f"{lenght=} must be between 0 and {width*height=}")
-	else:
-		lenght = width * height
 	# setup progress bar
 	pbar = tqdm(
 		total = width * height,
@@ -183,7 +181,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 	for y in range(height):
 		for x in range(width):
 			# break if end of bits reached and repeat is False
-			if bitsInd >= lenght:
+			if lenght is not None and bitsInd >= lenght:
 				pbar.total = y * width + x
 				BREAK = True
 				break
