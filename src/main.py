@@ -99,7 +99,7 @@ def main(*args, **kwargs):
 		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
 		while not os.access(os.path.dirname((outputImagePath := inputFormatter("Output image path"))), os.W_OK): pass
 		if not selected_advOpt.get(0):
-			while not os.path.isfile((inputImagePath := inputFormatter("Input file path"))): pass
+			while not os.path.isfile((inputFilePath := inputFormatter("Input file path"))): pass
 		else:
 			inputFilePath = consoleInputPath
 		
