@@ -4,14 +4,54 @@ import os, sys
 from PIL import UnidentifiedImageError
 from pick import pick
 from os.path import join as joinPath
-from os.path import abspath
 from colorama import init as coloramaInit
 
 from tools import *
 from functions import *
 
 
-def main(*args):
+def advancedOptions_for_setPatterns() -> tuple[list,list]:
+	title = "Advanced options:"
+	options = [
+		"Set bit position pattern",  # 0
+		"Set color channel pattern"  # 1
+	]
+	selected = pick(options, title, multiselect=True)
+	selected_advOpt = { index: option for option, index in selected }
+	if len(selected) > 0:
+		print(f"{Fore.BLUE}{title}{Fore.RESET}\n{Fore.RESET}-", "\n- ".join([ option.lower() for option, _ in selected ]))
+	else:
+		print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
+	
+	# advanced options: set bit position pattern
+	if selected_advOpt.get(0):
+		pattern = re.compile(r"[0-7]|most|least")
+		text = ""
+		bitPatternList = []
+		while len(bitPatternList) < 1:
+			text = input("Bit pattern: ")
+			bitPatternList = pattern.findall(text.lower())
+		bitPatternList = [ (int(el) if el.isdigit() else el) for el in bitPatternList ]
+	else:
+		bitPatternList =  ["least"]
+	
+	# advanced options: set color channel pattern
+	if selected_advOpt.get(1):
+		pattern = re.compile(r"[0-2]|r|g|b")
+		text = ""
+		colorPatternList = []
+		while len(colorPatternList) < 1:
+			text = input("Color channel pattern: ")
+			colorPatternList = pattern.findall(text.lower())
+		colorPatternList = [ (int(el) if el.isdigit() else el) for el in colorPatternList ]
+	else:
+		colorPatternList =  ["r", "g", "b"]
+	
+	# return option results
+	return bitPatternList, colorPatternList
+
+
+def main(*args, **kwargs):
 	# generate title as ascii art
 	ascii_art = generateTitle()
 	print("\n", "\n".join(ascii_art), "\n")
@@ -27,11 +67,10 @@ def main(*args):
 		# select: options
 		title = "Options:"
 		options = [
-			"Console input as input file",          # 0
-			"Show output image after saving",       # 1
-			"Repeat input file in image",           # 2
-			"Select position of manipulated bits",  # 3
-			"Get lenght of hidden bits"             # 4
+			"Use text input from console",     # 0
+			"Show output image after saving",  # 1
+			"Repeat input file in image",      # 2
+			"Get lenght of hidden bits"        # 3
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
@@ -52,31 +91,20 @@ def main(*args):
 			with open(consoleInputPath, "w+", encoding="utf-8") as fobj:
 				fobj.write("\n".join(inputList))
 		
-		# options: select position of manipulated bits
-		if selected_advOpt.get(3):
-			title = "Position of manipulated bits:"
-			options = [
-				"0 (most significant bit)",
-				"1", "2", "3", "4", "5", "6",
-				"7 (least significant bit)"
-			]
-			optionRating = { label: color for label, color in zip(options, [ *([Fore.RED]*3), *([Fore.YELLOW]*3), *([Fore.GREEN]*3) ]) }
-			option, index = pick(options, title)
-			print(f"{Fore.BLUE}{title} {Fore.RESET}{optionRating.get(option)}{option}")
-			pos = int(option[0])
-		else:
-			pos = "least"
+		# select: advanced options
+		bitPatternList, colorPatternList = advancedOptions_for_setPatterns()
 		
-		# get file paths without " or '
-		inputImagePath  = abspath(input(f"{Fore.BLUE}Input image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
-		outputImagePath = abspath(input(f"{Fore.BLUE}Output image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
+		# get valid file paths without " or '
+		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}:\t{Fore.RESET}").replace('"', '').replace("'", "")
+		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
+		while not os.access(os.path.dirname((outputImagePath := inputFormatter("Output image path"))), os.W_OK): pass
 		if not selected_advOpt.get(0):
-			inputFilePath = abspath(input(f"{Fore.BLUE}Input file path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
+			while not os.path.isfile((inputImagePath := inputFormatter("Input file path"))): pass
 		else:
 			inputFilePath = consoleInputPath
 		
 		# option: get lenght of hidden bits
-		if selected_advOpt.get(4):
+		if selected_advOpt.get(3):
 			lenght = len(file2BitArray(inputFilePath))
 			print(f"{Fore.CYAN}Lenght of hidden bits: {Fore.RESET}{lenght}")
 		
@@ -85,10 +113,11 @@ def main(*args):
 			inputImagePath,
 			outputImagePath,
 			inputFilePath,
-			# options: show, repeat, pos
+			# options: show, repeat, bitPattern, colorPattern
 			show = bool(selected_advOpt.get(1)),
 			repeat = bool(selected_advOpt.get(2)),
-			pos = pos
+			bitPattern = bitPatternList,
+			colorPattern = colorPatternList
 		)
 		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
 	
@@ -98,8 +127,7 @@ def main(*args):
 		title = "Options:"
 		options = [
 			"Show extracted file (image / text)",   # 0
-			"Select position of manipulated bits",  # 1
-			"Set lenght of hidden bits"             # 2
+			"Set lenght of hidden bits"             # 1
 		]
 		selected = pick(options, title, multiselect=True)
 		selected_advOpt = { index: option for option, index in selected }
@@ -108,33 +136,22 @@ def main(*args):
 		else:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
-		# options: select position of manipulated bits
-		if selected_advOpt.get(1):
-			title = "Position of manipulated bits:"
-			options = [
-				"0 (most significant bit)",
-				"1", "2", "3", "4", "5", "6",
-				"7 (least significant bit)"
-			]
-			optionRating = { label: color for label, color in zip(options, [ *([Fore.RED]*3), *([Fore.YELLOW]*3), *([Fore.GREEN]*3) ]) }
-			option, index = pick(options, title)
-			print(f"{Fore.BLUE}{title} {Fore.RESET}{optionRating.get(option)}{option}")
-			pos = int(option[0])
-		else:
-			pos = "least"
-		
 		# options: set lenght of hidden bits
-		if selected_advOpt.get(2):
+		if selected_advOpt.get(1):
 			while not (lenghtInput := input(f"{Fore.BLUE}Lenght of hidden bits: {Fore.RESET}")).isdigit():
 				pass
 			lenght = int(lenghtInput)
 		else:
 			lenght = None
-		
-		# get file paths without " or '
-		inputImagePath = abspath(input(f"{Fore.BLUE}Input image path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
-		outputFilePath = abspath(input(f"{Fore.BLUE}Output file path:\t{Fore.RESET}").replace('"', '').replace("'", ""))
 
+		# select: advanced options
+		bitPatternList, colorPatternList = advancedOptions_for_setPatterns()
+		
+		# get valid file paths without " or '
+		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}:\t{Fore.RESET}").replace('"', '').replace("'", "")
+		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
+		while not os.access(os.path.dirname((outputFilePath := inputFormatter("Output file path"))), os.W_OK): pass
+		
 		# seek file in image
 		error = seekFileInImage(
 			inputImagePath,
