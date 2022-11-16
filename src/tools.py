@@ -57,6 +57,9 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 	# get bits lenght
 	bitsLen = len(bits)
 	bitsInd = 0
+	# get patterns lenght
+	bitPatternLen = len(bitPattern)
+	colorPatternLen = len(colorPattern)
 	# hide file in input image
 	BREAK = False
 	for y in range(height):
@@ -66,11 +69,11 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 				pbar.total = bitsInd // 3
 				BREAK = True
 				break
-			# modify least significant bits
+			# modify bits
 			pixel = pixels[y][x]
-			r = setBit(bits[bitsInd % bitsLen], pixel[0], pos=pos); bitsInd += 1
-			g = setBit(bits[bitsInd % bitsLen], pixel[1], pos=pos); bitsInd += 1
-			b = setBit(bits[bitsInd % bitsLen], pixel[2], pos=pos); bitsInd += 1
+			r = setBit(bits[bitsInd % bitsLen], pixel[0], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
+			g = setBit(bits[bitsInd % bitsLen], pixel[1], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
+			b = setBit(bits[bitsInd % bitsLen], pixel[2], pos=bitPattern[bitsInd % bitPatternLen]); bitsInd += 1
 			pixels[y][x] = (r, g, b)
 			# update counters
 			pbarUpdate()
@@ -133,6 +136,9 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 		colour = "#ffb900"
 	)
 	pbarUpdate = lambda x=1: pbar.update(x)
+	# get patterns lenght
+	bitPatternLen = len(bitPattern)
+	colorPatternLen = len(colorPattern)
 	# seek bits from input image
 	bits = bitarray()
 	bitsInd = 0
@@ -144,14 +150,13 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 				pbar.total = bitsInd // 3
 				BREAK = True
 				break
-			# get bit at given position
+			# get bits
 			pixel = pixels[y][x]
-			bits.append(getBit(pixel[0], pos=pos))
-			bits.append(getBit(pixel[1], pos=pos))
-			bits.append(getBit(pixel[2], pos=pos))
+			bits.append(getBit(pixel[0], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
+			bits.append(getBit(pixel[1], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
+			bits.append(getBit(pixel[2], pos=bitPattern[bitsInd % bitPatternLen])); bitsInd += 1
 			# update counters
 			pbarUpdate()
-			bitsInd += 1
 		# break if inner loop breaks
 		if BREAK:
 			break
