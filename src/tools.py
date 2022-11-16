@@ -25,7 +25,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		raise TypeError(f"repeat={type(repeat)} must be of type bool")
 	if type(bitPattern) not in (list, tuple):
 		raise TypeError(f"bitPattern={type(bitPattern)} must be of type list")
-	if type(colorPattern) not in (list, tuple):
+	if type(colorPattern) is not list:
 		raise TypeError(f"colorPattern={type(colorPattern)} must be of type list")
 	# check values
 	if len(bitPattern) < 1:
@@ -33,17 +33,30 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 	if len(colorPattern) < 1:
 		raise ValueError(f"{colorPattern=} must contain at least one element")
 	# check inner types
-	for ind, el in enumerate(bitPattern):
-		if type(el) not in (int, str):
-			raise TypeError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
-	for ind, el in enumerate(colorPattern):
-		if type(el) not in (tuple, list):
-			raise TypeError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type tuple")
-		if not (1 <= len(el) <= 3): # check inner values
-			raise ValueError(f"colorPattern[{ind}]={colorPattern[ind]} must contain between 1 and 3 elements")
-		for ind2, el2 in enumerate(el):
-			if type(el2) not in (int, str):
-				raise TypeError(f"colorPattern[{ind}][{ind2}]={type(colorPattern[ind][ind2])} must be of type int or specific str")
+	for bitPosInd, bitPos in enumerate(bitPattern):
+		if type(bitPos) not in (int, str):
+			raise TypeError(f"bitPattern[{bitPosInd}]={type(bitPattern[bitPosInd])} must be of type int or a specific str")
+	channelLiterals = {"r": 0, "g": 1, "b": 2}
+	for colPxInd, colPx in enumerate(colorPattern):
+		if type(colPx) not in (tuple, list):
+			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type tuple")
+		# check inner values
+		if not (1 <= len(colPx) <= 3):
+			raise ValueError(f"colorPattern[{colPxInd}]={colorPattern[colPxInd]} must contain between 1 and 3 elements")
+		for colValInd, colVal in enumerate(colPx):
+			# check inner values
+			if type(colVal) is str:
+				colValInteger = channelLiterals.get(colVal)
+				if colValInteger is None:
+					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be 'r', 'g' or 'b' if str")
+				else:
+					colorPattern[colPxInd][colValInd] = colValInteger
+			elif type(colVal) is int:
+				if not (0 <= colVal <= 2):
+					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be between 0 and 2")
+			# check inner type
+			else:
+				raise TypeError(f"colorPattern[{colPxInd}][{colValInd}]={type(colorPattern[colPxInd][colValInd])} must be of type int or specific str")
 	# load image to array
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
@@ -56,7 +69,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		unit = "px",
 		desc = "Progress",
 		unit_scale = True,
-		colour = "#ffb900"
+		colour = "#FFB900"
 	)
 	pbarUpdate = lambda x=1: pbar.update(x)
 	# get bits lenght
@@ -86,7 +99,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		if BREAK:
 			break
 	# close progress bar
-	pbar.colour = "#8ce10b"
+	pbar.colour = "#8CE10B"
 	pbar.close()
 	# save image
 	outputImage = array2Image(pixels)
@@ -98,7 +111,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 seek functions
 """
 
-def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[int]=["least"], colorPattern:list[int]=["r","g","b"], lenght:int=None) -> bool:
+def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[int]=["least"], colorPattern:list[tuple[int]]=[("r","g","b")], lenght:int=None) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
@@ -106,7 +119,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 		raise TypeError(f"outputFilePath={type(outputFilePath)} must be of type str")
 	if type(bitPattern) not in (list, tuple):
 		raise TypeError(f"bitPattern={type(bitPattern)} must be of type list")
-	if type(colorPattern) not in (list, tuple):
+	if type(colorPattern) is not list:
 		raise TypeError(f"colorPattern={type(colorPattern)} must be of type list")
 	if type(lenght) not in (int, type(None)):
 		raise TypeError(f"lenght={type(lenght)} must be of type int or None")
@@ -116,17 +129,30 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 	if len(colorPattern) < 1:
 		raise ValueError(f"{colorPattern=} must contain at least one element")
 	# check inner types
-	for ind, el in enumerate(bitPattern):
-		if type(el) not in (int, str):
-			raise TypeError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
-	for ind, el in enumerate(colorPattern):
-		if type(el) not in (tuple, list):
-			raise TypeError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type tuple")
-		if not (1 <= len(el) <= 3): # check inner values
-			raise ValueError(f"colorPattern[{ind}]={colorPattern[ind]} must contain between 1 and 3 elements")
-		for ind2, el2 in enumerate(el):
-			if type(el2) not in (int, str):
-				raise TypeError(f"colorPattern[{ind}][{ind2}]={type(colorPattern[ind][ind2])} must be of type int or specific str")
+	for bitPosInd, bitPos in enumerate(bitPattern):
+		if type(bitPos) not in (int, str):
+			raise TypeError(f"bitPattern[{bitPosInd}]={type(bitPattern[bitPosInd])} must be of type int or a specific str")
+	channelLiterals = {"r": 0, "g": 1, "b": 2}
+	for colPxInd, colPx in enumerate(colorPattern):
+		if type(colPx) not in (tuple, list):
+			raise TypeError(f"colorPattern[{colPxInd}]={type(colorPattern[colPxInd])} must be of type tuple")
+		# check inner values
+		if not (1 <= len(colPx) <= 3):
+			raise ValueError(f"colorPattern[{colPxInd}]={colorPattern[colPxInd]} must contain between 1 and 3 elements")
+		for colValInd, colVal in enumerate(colPx):
+			# check inner values
+			if type(colVal) is str:
+				colValInteger = channelLiterals.get(colVal)
+				if colValInteger is None:
+					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be 'r', 'g' or 'b' if str")
+				else:
+					colorPattern[colPxInd][colValInd] = colValInteger
+			elif type(colVal) is int:
+				if not (0 <= colVal <= 2):
+					raise ValueError(f"colorPattern[{colPxInd}][{colValInd}]={colorPattern[colPxInd][colValInd]} must be between 0 and 2")
+			# check inner type
+			else:
+				raise TypeError(f"colorPattern[{colPxInd}][{colValInd}]={type(colorPattern[colPxInd][colValInd])} must be of type int or specific str")
 	# load image
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
@@ -143,7 +169,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 		unit = "px",
 		desc = "Progress",
 		unit_scale = True,
-		colour = "#ffb900"
+		colour = "#FFB900"
 	)
 	pbarUpdate = lambda x=1: pbar.update(x)
 	# get patterns lenght
@@ -171,7 +197,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[i
 		if BREAK:
 			break
 	# close progress bar
-	pbar.colour = "#8ce10b"
+	pbar.colour = "#8CE10B"
 	pbar.close()
 	# save seeked bits
 	error = bitArray2File(outputFilePath, bits)
