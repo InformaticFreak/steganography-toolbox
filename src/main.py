@@ -45,7 +45,7 @@ def advancedOptions_for_setPatterns() -> tuple[list,list]:
 			colorPatternList = pattern.findall(text.lower())
 		colorPatternList = [ [ (int(val) if val.isdigit() else val) for val in el ] for el in colorPatternList ]
 	else:
-		colorPatternList =  [["r", "g", "b"]]
+		colorPatternList = [["r", "g", "b"]]
 	
 	# return option results
 	return bitPatternList, colorPatternList
@@ -73,14 +73,14 @@ def main(*args, **kwargs):
 			"Get lenght of hidden bits"        # 3
 		]
 		selected = pick(options, title, multiselect=True)
-		selected_advOpt = { index: option for option, index in selected }
+		selected_opt = { index: option for option, index in selected }
 		if len(selected) > 0:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}\n{Fore.RESET}-", "\n- ".join([ option.lower() for option, _ in selected ]))
 		else:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
 		# options: read multiline text from console input
-		if selected_advOpt.get(0):
+		if selected_opt.get(0):
 			print(Fore.BLUE+"Multiline input: ")
 			inputList = []
 			while (text := input()) != "EOF":
@@ -98,13 +98,13 @@ def main(*args, **kwargs):
 		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}: {Fore.RESET}").replace('"', '').replace("'", "")
 		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
 		while not os.access(os.path.dirname((outputImagePath := inputFormatter("Output image path"))), os.W_OK): pass
-		if not selected_advOpt.get(0):
+		if not selected_opt.get(0):
 			while not os.path.isfile((inputFilePath := inputFormatter("Input file path"))): pass
 		else:
 			inputFilePath = consoleInputPath
 		
 		# option: get lenght of hidden bits
-		if selected_advOpt.get(3):
+		if selected_opt.get(3):
 			lenght = len(file2BitArray(inputFilePath))
 			print(f"{Fore.CYAN}Lenght of hidden bits: {Fore.RESET}{lenght}")
 		
@@ -114,8 +114,8 @@ def main(*args, **kwargs):
 			outputImagePath,
 			inputFilePath,
 			# options: show, repeat, bitPattern, colorPattern
-			show = bool(selected_advOpt.get(1)),
-			repeat = bool(selected_advOpt.get(2)),
+			show = bool(selected_opt.get(1)),
+			repeat = bool(selected_opt.get(2)),
 			bitPattern = bitPatternList,
 			colorPattern = colorPatternList
 		)
@@ -130,14 +130,14 @@ def main(*args, **kwargs):
 			"Set lenght of hidden bits"            # 1
 		]
 		selected = pick(options, title, multiselect=True)
-		selected_advOpt = { index: option for option, index in selected }
+		selected_opt = { index: option for option, index in selected }
 		if len(selected) > 0:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}\n{Fore.RESET}-", "\n- ".join([ option.lower() for option, _ in selected ]))
 		else:
 			print(f"{Fore.BLUE}{title}{Fore.RESET}{Style.DIM} --")
 		
 		# options: set lenght of hidden bits
-		if selected_advOpt.get(1):
+		if selected_opt.get(1):
 			while not (lenghtInput := input(f"{Fore.BLUE}Lenght of hidden bits: {Fore.RESET}")).isdigit():
 				pass
 			lenght = int(lenghtInput)
@@ -164,7 +164,7 @@ def main(*args, **kwargs):
 		print(f"{Fore.RED}file could not be saved" if error else f"{Fore.GREEN}file saved")
 		
 		# options: show extracted file
-		if selected_advOpt.get(0):
+		if selected_opt.get(0):
 			# try for text
 			try:
 				with open(outputFilePath, "r", encoding="utf-8") as fobj:
