@@ -95,7 +95,7 @@ def main(*args, **kwargs):
 		bitPatternList, colorPatternList = advancedOptions_for_setPatterns()
 		
 		# get valid file paths without " or '
-		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}:\t{Fore.RESET}").replace('"', '').replace("'", "")
+		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}: {Fore.RESET}").replace('"', '').replace("'", "")
 		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
 		while not os.access(os.path.dirname((outputImagePath := inputFormatter("Output image path"))), os.W_OK): pass
 		if not selected_advOpt.get(0):
@@ -148,7 +148,7 @@ def main(*args, **kwargs):
 		bitPatternList, colorPatternList = advancedOptions_for_setPatterns()
 		
 		# get valid file paths without " or '
-		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}:\t{Fore.RESET}").replace('"', '').replace("'", "")
+		inputFormatter = lambda prompt: input(f"{Fore.BLUE}{prompt}: {Fore.RESET}").replace('"', '').replace("'", "")
 		while not os.path.isfile((inputImagePath := inputFormatter("Input image path"))): pass
 		while not os.access(os.path.dirname((outputFilePath := inputFormatter("Output file path"))), os.W_OK): pass
 		
