@@ -13,7 +13,7 @@ from functions import *
 hide functions
 """
 
-def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, pos:int="least", **kwargs_save) -> bool:
+def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, *, repeat:bool=True, bitPattern:list[int]=["least"], colorPattern:list[int]=["r","g","b"], **kwargs_save) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
@@ -23,8 +23,22 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 		raise TypeError(f"inputFilePath={type(inputFilePath)} must be of type str")
 	if type(repeat) is not bool:
 		raise TypeError(f"repeat={type(repeat)} must be of type bool")
-	if type(pos) not in (int, str):
-		raise TypeError(f"pos={type(pos)} must be of type int as specific str")
+	if type(bitPattern) not in (list, tuple):
+		raise TypeError(f"bitPattern={type(bitPattern)} must be of type list")
+	if type(colorPattern) not in (list, tuple):
+		raise TypeError(f"colorPattern={type(colorPattern)} must be of type list")
+	# check values
+	if len(bitPattern) < 1:
+		raise ValueError(f"{bitPattern=} must contain at least one element")
+	if len(colorPattern) < 1:
+		raise ValueError(f"{colorPattern=} must contain at least one element")
+	# check inner types
+	for ind, el in enumerate(bitPattern):
+		if type(el) not in (int, str):
+			raise ValueError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
+	for ind, el in enumerate(colorPattern):
+		if type(el) not in (int, str):
+			raise ValueError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type int or a specific str")
 	# load image to array
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
@@ -58,6 +72,7 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 			g = setBit(bits[bitsInd % bitsLen], pixel[1], pos=pos); bitsInd += 1
 			b = setBit(bits[bitsInd % bitsLen], pixel[2], pos=pos); bitsInd += 1
 			pixels[y][x] = (r, g, b)
+			# update counters
 			pbarUpdate()
 		# break if inner loop breaks
 		if BREAK:
@@ -75,16 +90,30 @@ def hideFileInImage(inputImagePath:str, outputImagePath:str, inputFilePath:str, 
 seek functions
 """
 
-def seekFileInImage(inputImagePath:str, outputFilePath:str, *, pos:int="least", lenght:int=None) -> bool:
+def seekFileInImage(inputImagePath:str, outputFilePath:str, *, bitPattern:list[int]=["least"], colorPattern:list[int]=["r","g","b"], lenght:int=None) -> bool:
 	# check types
 	if type(inputImagePath) is not str:
 		raise TypeError(f"inputImagePath={type(inputImagePath)} must be of type str")
 	if type(outputFilePath) is not str:
 		raise TypeError(f"outputFilePath={type(outputFilePath)} must be of type str")
-	if type(pos) not in (int, str):
-		raise TypeError(f"pos={type(pos)} must be of type int or a specific str")
+	if type(bitPattern) not in (list, tuple):
+		raise TypeError(f"bitPattern={type(bitPattern)} must be of type list")
+	if type(colorPattern) not in (list, tuple):
+		raise TypeError(f"colorPattern={type(colorPattern)} must be of type list")
 	if type(lenght) not in (int, type(None)):
 		raise TypeError(f"lenght={type(lenght)} must be of type int or None")
+	# check values
+	if len(bitPattern) < 1:
+		raise ValueError(f"{bitPattern=} must contain at least one element")
+	if len(colorPattern) < 1:
+		raise ValueError(f"{colorPattern=} must contain at least one element")
+	# check inner types
+	for ind, el in enumerate(bitPattern):
+		if type(el) not in (int, str):
+			raise ValueError(f"bitPattern[{ind}]={type(bitPattern[ind])} must be of type int or a specific str")
+	for ind, el in enumerate(colorPattern):
+		if type(el) not in (int, str):
+			raise ValueError(f"colorPattern[{ind}]={type(colorPattern[ind])} must be of type int or a specific str")
 	# load image
 	inputImage = loadImage(inputImagePath)
 	width, height = inputImage.size
@@ -120,6 +149,7 @@ def seekFileInImage(inputImagePath:str, outputFilePath:str, *, pos:int="least", 
 			bits.append(getBit(pixel[0], pos=pos))
 			bits.append(getBit(pixel[1], pos=pos))
 			bits.append(getBit(pixel[2], pos=pos))
+			# update counters
 			pbarUpdate()
 			bitsInd += 1
 		# break if inner loop breaks
