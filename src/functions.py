@@ -58,10 +58,10 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 	if not (0 <= bits <= 255):
 		raise ValueError(f"{bits=} must be between 0 and 255")
 	posLiterals = {
-		("least", True ): 0,
-		("most" , True ): 7,
-		("least", False): 7,
-		("most" , False): 0
+		("least", True ): -1,
+		("most" , True ):  0,
+		("least", False):  0,
+		("most" , False): -1
 	}
 	if type(pos) is str:
 		posInteger = posLiterals.get((pos, bigEndian))
@@ -69,14 +69,14 @@ def setBit(bit:bool, bits:int, *, pos:int="least", bigEndian:bool=True) -> int:
 			raise ValueError(f"{pos=} must be 'least' or 'most' if str")
 		pos = posInteger
 	elif type(pos) is int:
-		if not (0 <= pos <= 7):
-			raise ValueError(f"{pos=} must be between 0 and 7")
-	# set bit using bit-shifting and return bits
-	if bit:
-		bits = bits | (1 << pos)
-	else:
-		bits = bits & ~(1 << pos)
-	return bits
+		if not (0 <= pos <= 7) and not (-8 <= pos <= -1):
+			raise ValueError(f"{pos=} must be between 0 and 7 or between -8 and -1")
+	# set bit; TODO: use bit-shifting
+	bitsStr = f"{bits:0>8b}"
+	bitsList = [ char for char in bitsStr ]
+	bitsList[pos] = str(int(bit))
+	# return bits as int
+	return int("".join(bitsList), 2)
 
 def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 	# check types
@@ -88,10 +88,10 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 		raise TypeError(f"bigEndian={type(bigEndian)} must be of type bool")
 	# check values
 	posLiterals = {
-		("least", True ): 0,
-		("most" , True ): 7,
-		("least", False): 7,
-		("most" , False): 0
+		("least", True ): -1,
+		("most" , True ):  0,
+		("least", False):  0,
+		("most" , False): -1
 	}
 	if type(pos) is str:
 		posInteger = posLiterals.get((pos, bigEndian))
@@ -99,10 +99,13 @@ def getBit(bits:int, *, pos:int="least", bigEndian:bool=True) -> bool:
 			raise ValueError(f"{pos=} must be 'least' or 'most' if str")
 		pos = posInteger
 	elif type(pos) is int:
-		if not (0 <= pos <= 7):
-			raise ValueError(f"{pos=} must be between 0 and 7")
-	# return bit using bit-shifting
-	return (bits & (1 << pos)) >> pos
+		if not (0 <= pos <= 7) and not (-8 <= pos <= -1):
+			raise ValueError(f"{pos=} must be between 0 and 7 or between -8 and -1")
+	# get bit; TODO: use bit-shifting
+	bitsString = f"{bits:0>8b}"
+	bit = bool(int(bitsString[pos]))
+	# return bit as bool
+	return bit
 
 """
 image <-> array functions
